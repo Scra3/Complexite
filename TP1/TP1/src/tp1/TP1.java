@@ -18,7 +18,7 @@ public class TP1 {
      * @param args the command line arguments
      */
     public Map algorithmeSimple(int tableau[]) {
-        Map<String, Integer> indices = new HashMap<String, Integer>(); // indice à sauvegarder, indice 0 pour la borne min et 1 pour la borne max
+        Map<String, Integer> indices = new HashMap<String, Integer>(); 
         int sauvegarde = 0; // permet de sauvegarde la valeur max de la séquence
         int resultat = 0; // variable tampon stockant le resultat de la séquence
         int l, i, j;
@@ -40,7 +40,7 @@ public class TP1 {
     }
 
     public Map algorithmeOptimise(int tableau[]) {
-        Map<String, Integer> indices = new HashMap<String, Integer>(); // indice à sauvegarder, indice 0 pour la borne min et 1 pour la borne max
+        Map<String, Integer> indices = new HashMap<String, Integer>(); 
         int sauvegarde = 0; // permet de sauvegarde la valeur max de la séquence
         int resultat = 0; // variable tampon stockant le resultat de la séquence
         int l, i, j;
