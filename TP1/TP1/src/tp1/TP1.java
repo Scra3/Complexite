@@ -41,7 +41,7 @@ public class TP1 {
 
     public Map algorithmeOptimise(int tableau[]) {
         Map<String, Integer> indices = new HashMap<String, Integer>();
-        int sauvegarde = 0; // permet de sauvegarde la valeur max de la séquence
+        int sauvegarde = -100000; // permet de sauvegarde la valeur max de la séquence
         int resultat = 0; // variable tampon stockant le resultat de la séquence
         int l, i, j;
 
@@ -56,17 +56,28 @@ public class TP1 {
             }
             resultat = 0;
         }
+        indices.put("SUM", sauvegarde);
         return indices;
     }
 
     public Map diviserRegnerMax(int tableau[]) {
+
+        // DECLARATIONS 
         Map<String, Integer> indices = new HashMap<String, Integer>();
+        Map<String, Integer> indices2 = new HashMap<String, Integer>();
+
+        Map<String, Integer> tampon = new HashMap<String, Integer>();
+
         int[] T1 = null;
         int[] T2 = null;
-
-        if (tableau.length <= 1) {
-            // calculer Max
+        int sum = 0;
+        int min = 0;
+        int max = 0;
+        tampon.put("SUM", 0);
+        //TRAITEMENTS
+        if (tableau.length < 3) {
             indices = algorithmeOptimise(tableau);
+
         } else {
             if (tableau.length > 1 && tableau.length % 2 == 0) {
 
@@ -78,26 +89,6 @@ public class TP1 {
                 }
 
                 int a = 0;
-                for (int i = tableau.length - 1; i >= tableau.length / 2; i--) {
-                    T2[a] = tableau[i];
-                    a++;
-                }
-                for (int i = 0;
-                        i < tableau.length / 2; i++) {
-                    System.out.print(" " + T1[i] + " ");
-
-                }
-
-                System.out.println("");
-
-                for (int i = 0;
-                        i < tableau.length / 2; i++) {
-                    System.out.print(" " + T2[i] + " ");
-
-                }
-
-                System.out.println("");
-
             }
             if (tableau.length > 1 && tableau.length % 2 != 0) {
 
@@ -113,25 +104,53 @@ public class TP1 {
                     T2[a] = tableau[i];
                     a++;
                 }
-                for (int i = 0;
-                        i < tableau.length / 2; i++) {
-                    System.out.print(" " + T1[i] + " ");
-
-                }
-
-                System.out.println("");
-
-                for (int i = 0; i < Math.floorDiv(tableau.length, 2) + 1; i++) {
-                    System.out.print(" " + T2[i] + " ");
-
-                }
-
-                System.out.println("");
-
             }
-            diviserRegnerMax(T1);
-            diviserRegnerMax(T2);
+
+            indices = diviserRegnerMax(T1);
+            indices2 = diviserRegnerMax(T2);
+
+            System.out.println("T:" + indices);
+            System.out.println("T2:" + indices2);
+
+            // récupérer valeurs 
+            sum = indices.get("SUM");
+            min = indices.get("MIN");
+            max = indices.get("MAX");
+
+            if (max + tampon.get("SUM") > tampon.get("SUM") && max + tampon.get("SUM") > max) {
+                // save sum
+                tampon.put("SUM", tampon.get("SUM") + max);
+                // save indices
+                tampon.put("MIN", min);
+                tampon.put("MAX", tampon.get("MAX"));
+            } else if (max + tampon.get("SUM") < max) {
+                // save sum
+                tampon.put("SUM", max);
+                // save indices
+                tampon.put("MIN", min);
+                tampon.put("MAX", max);
+            }
+            // récupérer valeurs 
+            sum = indices2.get("SUM");
+            min = indices2.get("MIN");
+            max = indices2.get("MAX");
+
+            if (max + tampon.get("SUM") > tampon.get("SUM") && max + tampon.get("SUM") > max) {
+                // save sum
+                tampon.put("SUM", max);
+                // save indices
+                tampon.put("MIN", min);
+                tampon.put("MAX", max);
+            } else if (max + tampon.get("SUM") < max) {
+
+                // save sum
+                tampon.put("SUM", tampon.get("SUM") + max);
+                // save indices
+                tampon.put("MIN", tampon.get("MIN"));
+                tampon.put("MAX", max);
+            }
         }
+
         return indices;
     }
 
