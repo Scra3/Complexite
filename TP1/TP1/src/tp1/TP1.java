@@ -59,14 +59,13 @@ public class TP1 {
         indices.put("SUM", sauvegarde);
         return indices;
     }
+    static Map<String, Integer> tampon = new HashMap<String, Integer>();
 
     public Map diviserRegnerMax(int tableau[]) {
 
         // DECLARATIONS 
         Map<String, Integer> indices = new HashMap<String, Integer>();
         Map<String, Integer> indices2 = new HashMap<String, Integer>();
-
-        Map<String, Integer> tampon = new HashMap<String, Integer>();
 
         int[] T1 = null;
         int[] T2 = null;
@@ -75,9 +74,37 @@ public class TP1 {
         int max = 0;
         tampon.put("SUM", 0);
         //TRAITEMENTS
-        if (tableau.length < 3) {
+        if (tableau.length < 2){
             indices = algorithmeOptimise(tableau);
+            System.out.println(indices);
+            // récupérer valeurs 
+            sum = indices.get("SUM");
+            min = indices.get("MIN");
+            max = indices.get("MAX");
 
+            if (max + tampon.get("SUM") > tampon.get("SUM") && max + tampon.get("SUM") > max) {
+                // save sum
+                tampon.put("SUM", tampon.get("SUM") + max);
+                // save indices
+                if (tampon.get("MIN") < min) {
+                    tampon.put("MIN", tampon.get("MIN"));
+                } else {
+                    tampon.put("MIN", min);
+                }
+
+                if (tampon.get("MAX") > max) {
+                    tampon.put("MIN", tampon.get("MAX"));
+                } else {
+                    tampon.put("MAX", max);
+                }
+
+            } else if (max + tampon.get("SUM") < max) {
+                // save sum
+                tampon.put("SUM", max);
+                // save indices
+                tampon.put("MIN", min);
+                tampon.put("MAX", max);
+            }
         } else {
             if (tableau.length > 1 && tableau.length % 2 == 0) {
 
@@ -106,52 +133,10 @@ public class TP1 {
                 }
             }
 
-            indices = diviserRegnerMax(T1);
-            indices2 = diviserRegnerMax(T2);
-
-            System.out.println("T:" + indices);
-            System.out.println("T2:" + indices2);
-
-            // récupérer valeurs 
-            sum = indices.get("SUM");
-            min = indices.get("MIN");
-            max = indices.get("MAX");
-
-            if (max + tampon.get("SUM") > tampon.get("SUM") && max + tampon.get("SUM") > max) {
-                // save sum
-                tampon.put("SUM", tampon.get("SUM") + max);
-                // save indices
-                tampon.put("MIN", min);
-                tampon.put("MAX", tampon.get("MAX"));
-            } else if (max + tampon.get("SUM") < max) {
-                // save sum
-                tampon.put("SUM", max);
-                // save indices
-                tampon.put("MIN", min);
-                tampon.put("MAX", max);
-            }
-            // récupérer valeurs 
-            sum = indices2.get("SUM");
-            min = indices2.get("MIN");
-            max = indices2.get("MAX");
-
-            if (max + tampon.get("SUM") > tampon.get("SUM") && max + tampon.get("SUM") > max) {
-                // save sum
-                tampon.put("SUM", max);
-                // save indices
-                tampon.put("MIN", min);
-                tampon.put("MAX", max);
-            } else if (max + tampon.get("SUM") < max) {
-
-                // save sum
-                tampon.put("SUM", tampon.get("SUM") + max);
-                // save indices
-                tampon.put("MIN", tampon.get("MIN"));
-                tampon.put("MAX", max);
-            }
+            diviserRegnerMax(T1);
+            diviserRegnerMax(T2);
         }
-
-        return indices;
+        return tampon;
     }
 
     public static void main(String[] args) {
