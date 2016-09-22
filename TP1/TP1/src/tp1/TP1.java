@@ -11,9 +11,9 @@ public class TP1 {
 
     static Map<String, Integer> sequenceT1 = new HashMap<String, Integer>();
     static Map<String, Integer> sequenceT2 = new HashMap<String, Integer>();
-    static int tour = 0;
+    static Map<String, Integer> sequenceMax = new HashMap<>();
+
     static int T[];
-    static boolean gauche = true;
 
     /**
      * @param args the command line arguments
@@ -64,31 +64,47 @@ public class TP1 {
     public Map diviserRegnerMax(int tableau[], Map<String, Integer> sequenceMax) {
 
         // DECLARATIONS 
+        //Sous séquence de gauche
         Map<String, Integer> sousSequenceT1 = new HashMap<String, Integer>();
+        //Sous séquence de droite 
         Map<String, Integer> sousSequenceT2 = new HashMap<String, Integer>();
+        // Sous déquence du millieu
         Map<String, Integer> sousSequence = new HashMap<String, Integer>();
 
+        // les sous tableaux du tableau principal
         int[] T1 = null;
         int[] T2 = null;
+        // variable d'opérandes et d'indices
         int sum = 0;
         int min = 0;
         int max = 0;
+        //médiane du tableau courant
         int mediane = 0;
-        tour++;
 
         //TRAITEMENTS
+        //On vérifie si le tableau est inférieur à la longueur 4
         if (tableau.length < 4) {
+            // on cherche la sous séquence qui nous retourne l' indice min l' indice max et la somme de la séquence
             sousSequenceT1 = algorithmeOptimise(tableau);
         } else {
 
+            // DIVISION DU TABLEAU COURANT
+            // cacule de la médiane
             mediane = Math.floorDiv(tableau.length, 2) - 1;
+            // cacule de la taille de T1
             T1 = new int[(int) Math.floorDiv(tableau.length, 2)];
 
+            //Calcule de la taille de T2
+            //Si tableau est paire on divise par deux 
             if (tableau.length % 2 == 0) {
                 T2 = new int[tableau.length / 2];
-            } else if (tableau.length % 2 != 0) {
+
+            }// si il est imparaire on prend le planchet de la division et on rajoute 1 
+            //: 5/2 = 2.5 => 2 +1 = 3 donc T1 sera de taille 2 et T2 de taille 3 
+            else if (tableau.length % 2 != 0) {
                 T2 = new int[Math.floorDiv(tableau.length, 2) + 1];
             }
+            // Implémentation des tableaux
             for (int i = 0; i < Math.floorDiv(tableau.length, 2); i++) {
                 T1[i] = tableau[i];
             }
@@ -100,15 +116,17 @@ public class TP1 {
             }
 
             sousSequenceT1 = diviserRegnerMax(T1, sequenceMax);
-            sousSequenceT1 = caculerMediane(true, sousSequenceT1, mediane, tableau.length);
             sousSequenceT2 = diviserRegnerMax(T2, sequenceMax);
 
-            if (tableau.length != T.length || tour < 2) {
+            // On recalcul les indices
+            sousSequenceT1 = caculerMediane(true, sousSequenceT1, mediane, tableau.length);
+            sousSequenceT2 = caculerMediane(false, sousSequenceT2, mediane, tableau.length);
+            
+            // on calcul le chevauchement
+            sousSequence = calculerChevauchement(tableau, sousSequenceT1, sousSequenceT2);
 
-                sousSequenceT2 = caculerMediane(false, sousSequenceT2, mediane, tableau.length);
-                sousSequence = calculerChevauchement(tableau, sousSequenceT1, sousSequenceT2);
-                sauvegarderMax(sousSequence, tableau.length);
-            }
+            // on sauvegarde la plus grande séquence
+            sauvegarderMax(sousSequence);
         }
 
         return sousSequenceT1;
@@ -123,16 +141,11 @@ public class TP1 {
         min1 = sequence_1.get("MIN");
         sum1 = sequence_1.get("SUM");
 
-        if (tailleTableau == T.length) {
-            gauche = false;
-        }
-
         if (B == true) {
             sequenceMax.put("MAX", max1);
             sequenceMax.put("MIN", min1);
             sequenceMax.put("SUM", sum1);
         } else {
-
             sequenceMax.put("MAX", mediane + max1 + 1);
             sequenceMax.put("MIN", mediane + min1 + 1);
             sequenceMax.put("SUM", sum1);
@@ -141,16 +154,12 @@ public class TP1 {
         return sequenceMax;
     }
 
-    public static void sauvegarderMax(Map<String, Integer> sousSequence, int tailletableau) {
+    public static void sauvegarderMax(Map<String, Integer> sousSequence) {
 
-        if (sousSequence.get("SUM") > sequenceT1.get("SUM") && gauche == true) {
-            sequenceT1.put("MAX", sousSequence.get("MAX"));
-            sequenceT1.put("MIN", sousSequence.get("MIN"));
-            sequenceT1.put("SUM", sousSequence.get("SUM"));
-        } else {
-            sequenceT2.put("MAX", sousSequence.get("MAX"));
-            sequenceT2.put("MIN", sousSequence.get("MIN"));
-            sequenceT2.put("SUM", sousSequence.get("SUM"));
+        if (sousSequence.get("SUM") > sequenceMax.get("SUM")) {
+            sequenceMax.put("MAX", sousSequence.get("MAX"));
+            sequenceMax.put("MIN", sousSequence.get("MIN"));
+            sequenceMax.put("SUM", sousSequence.get("SUM"));
         }
     }
 
@@ -174,49 +183,43 @@ public class TP1 {
             return sequenceChevauchement;
         } else if (sumCh <= T1.get("SUM") && T2.get("SUM") <= T1.get("SUM")) {
             return T1;
-        } else if (sumCh <= T2.get("SUM") && T2.get("SUM") >= T1.get("SUM")) {
-            return T2;
+            // (sumCh <= T2.get("SUM") && T2.get("SUM") >= T1.get("SUM"))
         } else {
-            return null;
+            return T2;
         }
     }
 
     public static void main(String[] args) {
+
         TP1 algos = new TP1();
+        //Initialisation des sequences 
+
+        sequenceT1.put("MAX", 0);
+        sequenceT1.put("MIN", 0);
+        sequenceT1.put("SUM", 0);
+
+        sequenceT2.put("MAX", 0);
+        sequenceT2.put("MIN", 0);
+        sequenceT2.put("SUM", 0);
+
+        sequenceMax.put("MAX", 0);
+        sequenceMax.put("MIN", 0);
+        sequenceMax.put("SUM", 0);
+
         // TODO code application logic here
         if (args.length == 0) {
-            T = new int[10];
-
-            T[0] = 44;
-            T[1] = -54;
-            T[2] = 100;
-            T[3] = -62;
-            T[4] = -65;
-            T[5] = -82;
-            T[6] = 81;
-            T[7] = -82;
-            T[8] = 2;
-            T[9] = 3;
-        }else{
+            T = new int[]{44, -54, 100, -62, -65, -82, 81,
+                -82, 86, 64, 50, 569, 9, 4};
+        } else {
             T = new int[args.length];
             for (int i = 0; i < args.length; i++) {
                 T[i] = Integer.parseInt(args[i]);
             }
         }
 
-        //Initialisation des sequences 
-        sequenceT1.put("MAX", 0);
-        sequenceT1.put("MIN", 0);
-        sequenceT1.put("SUM", 0);
-        sequenceT2.put("MAX", 0);
-        sequenceT2.put("MIN", 0);
-        sequenceT2.put("SUM", 0);
-        Map<String, Integer> sequenceMax = new HashMap<>();
-
         // initialisation du tableau 
         algos.diviserRegnerMax(T, sequenceMax);
-
-        System.out.println(calculerChevauchement(T, caculerMediane(true, sequenceT1, T.length / 2 - 1, T.length), caculerMediane(false, sequenceT2, T.length / 2 - 1, T.length)));
+        System.out.println(sequenceMax);
 
     }
 
