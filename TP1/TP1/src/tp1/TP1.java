@@ -12,7 +12,7 @@ public class TP1 {
     static Map<String, Integer> sequenceT1 = new HashMap<String, Integer>();
     static Map<String, Integer> sequenceT2 = new HashMap<String, Integer>();
     static int tour = 0;
-    static int T[] = new int[10];
+    static int T[];
     static boolean gauche = true;
 
     /**
@@ -80,58 +80,33 @@ public class TP1 {
         if (tableau.length < 4) {
             sousSequenceT1 = algorithmeOptimise(tableau);
         } else {
+
+            mediane = Math.floorDiv(tableau.length, 2) - 1;
+            T1 = new int[(int) Math.floorDiv(tableau.length, 2)];
+
             if (tableau.length % 2 == 0) {
-
-                mediane = tableau.length / 2 - 1;
-
-                T1 = new int[(int) Math.floorDiv(tableau.length, 2)];
                 T2 = new int[tableau.length / 2];
-
-                for (int i = 0; i < Math.floorDiv(tableau.length, 2); i++) {
-                    T1[i] = tableau[i];
-                }
-                int a = 0;
-
-                for (int i = Math.floorDiv(tableau.length, 2); i < tableau.length; i++) {
-                    T2[a] = tableau[i];
-                    a++;
-                }
-
-            }
-            if (tableau.length % 2 != 0) {
-
-                mediane = Math.floorDiv(tableau.length, 2) - 1;
-
-                T1 = new int[Math.floorDiv(tableau.length, 2)];
+            } else if (tableau.length % 2 != 0) {
                 T2 = new int[Math.floorDiv(tableau.length, 2) + 1];
+            }
+            for (int i = 0; i < Math.floorDiv(tableau.length, 2); i++) {
+                T1[i] = tableau[i];
+            }
+            int a = 0;
 
-                for (int i = 0; i < Math.floorDiv(tableau.length, 2); i++) {
-                    T1[i] = tableau[i];
-                }
-
-                int a = 0;
-                for (int i = Math.floorDiv(tableau.length, 2); i < tableau.length; i++) {
-                    T2[a] = tableau[i];
-                    a++;
-                }
+            for (int i = Math.floorDiv(tableau.length, 2); i < tableau.length; i++) {
+                T2[a] = tableau[i];
+                a++;
             }
 
             sousSequenceT1 = diviserRegnerMax(T1, sequenceMax);
             sousSequenceT1 = caculerMediane(true, sousSequenceT1, mediane, tableau.length);
-
             sousSequenceT2 = diviserRegnerMax(T2, sequenceMax);
 
             if (tableau.length != T.length || tour < 2) {
 
                 sousSequenceT2 = caculerMediane(false, sousSequenceT2, mediane, tableau.length);
                 sousSequence = calculerChevauchement(tableau, sousSequenceT1, sousSequenceT2);
-
-                /*System.out.println(tableau.length);
-                System.out.println("MEDIANE "+ mediane );
-                System.out.println("T1 " + sousSequenceT1);
-                System.out.println("T2 " + sousSequenceT2);
-                System.out.println("T " + sousSequence);
-                 */
                 sauvegarderMax(sousSequence, tableau.length);
             }
         }
@@ -209,26 +184,35 @@ public class TP1 {
     public static void main(String[] args) {
         TP1 algos = new TP1();
         // TODO code application logic here
-
-        Map<String, Integer> sequenceMax = new HashMap<>();
+        T = new int[args.length];
+        int a = 0;
+        for (String i : args) {
+            T[a] = Integer.parseInt(args[a]);
+            a++;
+        }
+        //Initialisation des sequences 
         sequenceT1.put("MAX", 0);
         sequenceT1.put("MIN", 0);
-        sequenceT1.put("SUM", -100000);
+        sequenceT1.put("SUM", 0);
         sequenceT2.put("MAX", 0);
         sequenceT2.put("MIN", 0);
-        sequenceT2.put("SUM", -100000);
+        sequenceT2.put("SUM", 0);
+        Map<String, Integer> sequenceMax = new HashMap<>();
 
-        T[0] = 100;
-        T[1] = 80;
-        T[2] = 50;
-        T[3] = 0;
-        T[4] = 50;
+        // initialisation du tableau 
+        T[0] = 44;
+        T[1] = -54;
+        T[2] = 100;
+        T[3] = -62;
+        T[4] = -65;
 
-        T[5] = 0;
-        T[6] = -100000;
-        T[7] = 100000;
-        T[8] = 10;
-        T[9] = -10;
+        T[5] = -82;
+        T[6] = 81;
+        T[7] = -82;
+        T[8] = 2;
+        T[9] = 3;
+
+        int T2[] = new int[]{44, -54, 100, -62, -65, -82, 81, -82, 2, 3};
 
         algos.diviserRegnerMax(T, sequenceMax);
 
