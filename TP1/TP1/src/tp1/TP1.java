@@ -185,11 +185,11 @@ public class TP1 {
         TP1 algos = new TP1();
         // TODO code application logic here
         T = new int[args.length];
-        int a = 0;
-        for (String i : args) {
-            T[a] = Integer.parseInt(args[a]);
-            a++;
+        for (int i = 0; i < args.length; i++) {
+            T[i] = Integer.parseInt(args[i]);
+
         }
+
         //Initialisation des sequences 
         sequenceT1.put("MAX", 0);
         sequenceT1.put("MIN", 0);
