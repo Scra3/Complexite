@@ -184,10 +184,24 @@ public class TP1 {
     public static void main(String[] args) {
         TP1 algos = new TP1();
         // TODO code application logic here
-        T = new int[args.length];
-        for (int i = 0; i < args.length; i++) {
-            T[i] = Integer.parseInt(args[i]);
+        if (args.length == 0) {
+            T = new int[10];
 
+            T[0] = 44;
+            T[1] = -54;
+            T[2] = 100;
+            T[3] = -62;
+            T[4] = -65;
+            T[5] = -82;
+            T[6] = 81;
+            T[7] = -82;
+            T[8] = 2;
+            T[9] = 3;
+        }else{
+            T = new int[args.length];
+            for (int i = 0; i < args.length; i++) {
+                T[i] = Integer.parseInt(args[i]);
+            }
         }
 
         //Initialisation des sequences 
@@ -200,20 +214,6 @@ public class TP1 {
         Map<String, Integer> sequenceMax = new HashMap<>();
 
         // initialisation du tableau 
-        T[0] = 44;
-        T[1] = -54;
-        T[2] = 100;
-        T[3] = -62;
-        T[4] = -65;
-
-        T[5] = -82;
-        T[6] = 81;
-        T[7] = -82;
-        T[8] = 2;
-        T[9] = 3;
-
-        int T2[] = new int[]{44, -54, 100, -62, -65, -82, 81, -82, 2, 3};
-
         algos.diviserRegnerMax(T, sequenceMax);
 
         System.out.println(calculerChevauchement(T, caculerMediane(true, sequenceT1, T.length / 2 - 1, T.length), caculerMediane(false, sequenceT2, T.length / 2 - 1, T.length)));
