@@ -85,6 +85,28 @@ public class MiniSat {
             }
         }
     }
+	
+    public int[] genererGraphe(int sommets){
+
+	int arretes = 0;
+	int sommetA = 0;
+	int sommetB = 0;
+	int a = -1;
+	int tailleG = 2+(2*arretes);
+	int G[] = new int[tailleG];
+
+	// generer arretes
+	int arretes = (int)(Math.random() * (sommets-1)) + 1;
+	
+	// generer couples
+	for(int i = 0 ; i < arretes ; i++){
+		sommetA = (int)(Math.random() * (sommets-1)) + 1;
+		sommetB = (int)(Math.random() * (sommets-1)) + 1;
+		G[a +1] = sommetA;
+		G[a + 2] = sommetB;
+		a + 2;
+	}
+    }
 
     public static void main(String[] args) {
         // TODO code application logic here
@@ -101,17 +123,17 @@ public class MiniSat {
 			Process p1 = Runtime.getRuntime().exec(new String[]{"bash","-c","minisat output.cnf solutions"});
 			Process p2 = Runtime.getRuntime().exec(new String[]{"bash","-c","java MiniSat solutions"});
 			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-String line = null;			
-while ((line = in.readLine()) != null) {
-                	System.out.println(line);
+			String line = null;			
+			while ((line = in.readLine()) != null) {
+				System.out.println(line);
             		} 
 			BufferedReader in1 = new BufferedReader(new InputStreamReader(p1.getInputStream()));
-line = null;
+			line = null;
 			while ((line = in1.readLine()) != null) {
                 	System.out.println(line);
             		} 
 			BufferedReader in2 = new BufferedReader(new InputStreamReader(p2.getInputStream()));
-line = null;
+			line = null;
 			while ((line = in2.readLine()) != null) {
                 	System.out.println(line);
             		} 
