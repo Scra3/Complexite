@@ -96,7 +96,7 @@ public class MiniSat {
 	int G[] = new int[tailleG];
 
 	// generer arretes
-	int arretes = (int)(Math.random() * (sommets-1)) + 1;
+	arretes = (int)(Math.random() * (sommets-1)) + 1;
 	
 	// generer couples
 	for(int i = 0 ; i < arretes ; i++){
@@ -104,8 +104,9 @@ public class MiniSat {
 		sommetB = (int)(Math.random() * (sommets-1)) + 1;
 		G[a +1] = sommetA;
 		G[a + 2] = sommetB;
-		a + 2;
+		a = a + 2;
 	}
+        return G;
     }
 
     public static void main(String[] args) {
