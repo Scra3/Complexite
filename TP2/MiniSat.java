@@ -3,12 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package minisat;
-
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javafx.util.Pair;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
+import java.io.*;
 
 /**
  *
@@ -84,11 +88,39 @@ public class MiniSat {
 
     public static void main(String[] args) {
         // TODO code application logic here
-        MiniSat minisat = new MiniSat();
-        
-        int G[] = {6, 11, 1, 2, 2, 3, 3, 4, 4, 1, 5, 2, 5, 3, 5, 4, 5, 6,5,1,1,6,2,6};
-        minisat.trois_col(G);
-        System.out.println(minisat.getMinisatLine());
-    }
-
+	if(args.length == 0){
+	System.out.println("");
+		MiniSat minisat = new MiniSat();
+		
+		int G[] = {6, 11, 1, 2, 2, 3, 3, 4, 4, 1, 5, 2, 5, 3, 5, 4, 5, 6,5,1,1,6,2,6};
+		minisat.trois_col(G);
+		System.out.println(minisat.getMinisatLine());
+		try{
+		 	
+			Process p = Runtime.getRuntime().exec(new String[]{"bash","-c","java MiniSat > output.cnf"});
+			Process p1 = Runtime.getRuntime().exec(new String[]{"bash","-c","minisat output.cnf solutions"});
+			Process p2 = Runtime.getRuntime().exec(new String[]{"bash","-c","java MiniSat solutions"});
+			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+String line = null;			
+while ((line = in.readLine()) != null) {
+                	System.out.println(line);
+            		} 
+			BufferedReader in1 = new BufferedReader(new InputStreamReader(p1.getInputStream()));
+line = null;
+			while ((line = in1.readLine()) != null) {
+                	System.out.println(line);
+            		} 
+			BufferedReader in2 = new BufferedReader(new InputStreamReader(p2.getInputStream()));
+line = null;
+			while ((line = in2.readLine()) != null) {
+                	System.out.println(line);
+            		} 
+       		    	
+		}catch(IOException e){
+ 			 e.printStackTrace();
+		} 		   	
+	}else{
+		System.out.println("INSAT");
+    	}
+     }
 }
