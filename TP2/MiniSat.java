@@ -1,24 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javafx.util.Pair;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
-import java.io.*;
 
-/**
- *
- * @author Scra
- */
-public class MiniSat {
+public class Minisat {
 
     /**
      * @param args the command line arguments
@@ -77,73 +70,174 @@ public class MiniSat {
         }
 
         for (int i = 0; i < this.getPairList().size(); i++) {
-            
+
             for (int k = 0; k < 3; k++) {
-                String v = Integer.toString(tableauSave[this.getPairList().get(i).getKey()-1][k]);
-                String n = Integer.toString(tableauSave[this.getPairList().get(i).getValue()-1][k]);
-                this.setMinisatLine("-" + v + " " + "-" + n + " 0 \n"); 
+                String v = Integer.toString(tableauSave[this.getPairList().get(i).getKey() - 1][k]);
+                String n = Integer.toString(tableauSave[this.getPairList().get(i).getValue() - 1][k]);
+                this.setMinisatLine("-" + v + " " + "-" + n + " 0 \n");
             }
         }
     }
-	
-    public int[] genererGraphe(int sommets){
 
-	int arretes = 0;
-	int sommetA = 0;
-	int sommetB = 0;
-	int a = -1;
-	int tailleG = 2+(2*arretes);
-	int G[] = new int[tailleG];
+    public void getCouleur(String reponse) {
 
-	// generer arretes
-	arretes = (int)(Math.random() * (sommets-1)) + 1;
-	
-	// generer couples
-	for(int i = 0 ; i < arretes ; i++){
-		sommetA = (int)(Math.random() * (sommets-1)) + 1;
-		sommetB = (int)(Math.random() * (sommets-1)) + 1;
-		G[a +1] = sommetA;
-		G[a + 2] = sommetB;
-		a = a + 2;
-	}
+        String[] splitReponse = reponse.split(" ");
+
+        Integer[][] couples = new Integer[splitReponse.length / 3][3];
+
+        String rouge = "rouge";
+        String vert = "vert";
+        String bleu = "bleu";
+
+        int a = -1;
+        for (int i = 0; i < splitReponse.length / 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                a++;
+                couples[i][j] = Integer.parseInt(splitReponse[a]);
+            }
+
+        }
+
+        for (int i = 0; i < couples.length; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (couples[i][j] > 0) {
+                    int x = i;
+                    x = x + 1;
+                    if (j == 0) {
+
+                        System.out.println(" Sommet " + x + " : couleur : " + rouge);
+                    }
+                    if (j == 1) {
+                        System.out.println(" Sommet " + x + " : couleur : " + vert);
+                    }
+                    if (j == 2) {
+                        System.out.println(" Sommet " + x + " : couleur : " + bleu);
+                    }
+                }
+            }
+        }
+
+    }
+
+ 
+
+    public int[] genererGraphe(int sommets) {
+
+        int arretes = 0;
+        int sommetA = 0;
+        int sommetB = 0;
+        
+        int a = 1;
+        
+
+
+
+        // generer arretes
+        arretes = (int) (Math.random() * (10000)) + 1;
+        
+        int tailleG = 2 + (2 * arretes);
+        int G[] = new int[tailleG];
+        
+        G [0] = sommets;
+        G [1] = arretes;
+        
+        // generer couples
+        for (int i = 0; i < arretes; i++) {
+            sommetA = (int) (Math.random() * (sommets )) + 1;
+            sommetB = (int) (Math.random() * (sommets )) + 1;
+            G[a + 1] = sommetA;
+            G[a + 2] = sommetB;
+            a = a + 2;
+        }
         return G;
     }
 
-    public static void main(String[] args) {
-        // TODO code application logic here
-	if(args.length == 0){
-	System.out.println("");
-		MiniSat minisat = new MiniSat();
-		
-		int G[] = {6, 11, 1, 2, 2, 3, 3, 4, 4, 1, 5, 2, 5, 3, 5, 4, 5, 6,5,1,1,6,2,6};
-		minisat.trois_col(G);
-		System.out.println(minisat.getMinisatLine());
-		try{
-		 	
-			Process p = Runtime.getRuntime().exec(new String[]{"bash","-c","java MiniSat > output.cnf"});
-			Process p1 = Runtime.getRuntime().exec(new String[]{"bash","-c","minisat output.cnf solutions"});
-			Process p2 = Runtime.getRuntime().exec(new String[]{"bash","-c","java MiniSat solutions"});
-			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			String line = null;			
-			while ((line = in.readLine()) != null) {
-				System.out.println(line);
-            		} 
-			BufferedReader in1 = new BufferedReader(new InputStreamReader(p1.getInputStream()));
-			line = null;
-			while ((line = in1.readLine()) != null) {
-                	System.out.println(line);
-            		} 
-			BufferedReader in2 = new BufferedReader(new InputStreamReader(p2.getInputStream()));
-			line = null;
-			while ((line = in2.readLine()) != null) {
-                	System.out.println(line);
-            		} 
-       		    	
-		}catch(IOException e){
- 			 e.printStackTrace();
-		} 		   	
-	}else{
-		System.out.println("INSAT");
-    	}
-     }
+    public void printLinuxCommand(String command) throws Exception {
+        System.out.println(command);
+        String line = "";
+        Process process = Runtime.getRuntime().exec(command);
+        Reader r = new InputStreamReader(process.getInputStream());
+        BufferedReader in = new BufferedReader(r);
+
+        while ((line = in.readLine()) != null) {
+            System.out.println(line);
+        }
+
+        in.close();
+    }
+
+    public String lireFichier(File fichier) {
+        String chaine = "";
+
+        try {
+            FileInputStream ips = new FileInputStream(fichier);
+            InputStreamReader ipsr = new InputStreamReader(ips);
+            BufferedReader br = new BufferedReader(ipsr);
+            String ligne = "";
+            while ((ligne = br.readLine()) != null) {
+                System.out.println(ligne);
+                chaine += ligne + "\n";
+            }
+            br.close();
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        return chaine;
+    }
+
+    public static void main(String[] args) throws Exception {
+        Minisat minisat = new Minisat();
+        int G[]  = null ;
+        
+        // générer graphe
+        G = minisat.genererGraphe(1000);
+        // graphe satisf
+       // int G[] = {6, 10, 1, 2, 2, 3, 3, 4, 4, 1, 5, 2, 5, 3, 5, 4, 5,1,1,6,2,6};
+
+        for(int i = 0; i < G.length; i++){
+        	System.out.print(G[i]+ " " );
+        }
+        if (args.length < 1) {
+
+            String chemin = "output.cnf";
+            minisat.trois_col(G);
+
+            File fichier = new File(chemin);
+
+            // Creation du fichier
+            fichier.createNewFile();
+
+            FileWriter writer = new FileWriter(fichier);
+            try {
+                writer.write(minisat.getMinisatLine());
+            } catch (IOException e) {
+                System.out.println("Impossible de creer le fichier");
+            } finally {
+                writer.close();
+            }
+
+            minisat.printLinuxCommand("minisat" + " " + fichier.getAbsolutePath() + " " + "debug.cnf");
+            minisat.printLinuxCommand("java Minisat debug.cnf");
+
+        } else {
+            String chemin = "debug.cnf";
+            File fichier = new File(chemin);
+
+            String contenu = minisat.lireFichier(fichier);
+            String[] reponse = contenu.split("\n");
+
+            if (reponse.length > 1) {
+                minisat.printLinuxCommand("clear");
+                System.out.println("Le graphe est SATISFAISABLE");
+                System.out.println("Coloriage : ");
+                minisat.getCouleur(reponse[1]);
+
+            } else {
+                minisat.printLinuxCommand("clear");
+                System.out.println("Le graphe est INSATISFAISABLE");
+            }
+        }
+
+    }
+
 }
