@@ -238,6 +238,9 @@ public class Minisat {
             } else {
                 minisat.printLinuxCommand("clear");
                 System.out.println("Le graphe est INSATISFAISABLE");
+		System.out.println("Nombre arretes : " + nbArretes);
+		System.out.println("Sommets : 1000" );
+
             }
         }
 
