@@ -18,7 +18,7 @@ public class Minisat {
      */
     String minisatLine;
     List<Pair<Integer, Integer>> pairList = new ArrayList<Pair<Integer, Integer>>();
-
+    static int nbArretes = 1000;
     public void Minisat() {
 
     }
@@ -133,8 +133,8 @@ public class Minisat {
 
 
         // generer arretes
-        arretes = (int) (Math.random() * (10000)) + 1;
-        
+        arretes = (int) (Math.random() * (nbArretes)) + 1;
+        nbArretes = arretes;
         int tailleG = 2 + (2 * arretes);
         int G[] = new int[tailleG];
         
@@ -187,12 +187,13 @@ public class Minisat {
 
     public static void main(String[] args) throws Exception {
         Minisat minisat = new Minisat();
-        int G[]  = null ;
+        //int G[]  = null ;
         
         // générer graphe
-        G = minisat.genererGraphe(1000);
+        int[] G = minisat.genererGraphe(1000);
         // graphe satisf
-       // int G[] = {6, 10, 1, 2, 2, 3, 3, 4, 4, 1, 5, 2, 5, 3, 5, 4, 5,1,1,6,2,6};
+	// = {6, 10, 1, 2, 2, 3, 3, 4, 4, 1, 5, 2, 5, 3, 5, 4, 5,1,1,6,2,6};
+
 
         for(int i = 0; i < G.length; i++){
         	System.out.print(G[i]+ " " );
@@ -231,6 +232,8 @@ public class Minisat {
                 System.out.println("Le graphe est SATISFAISABLE");
                 System.out.println("Coloriage : ");
                 minisat.getCouleur(reponse[1]);
+		System.out.println("Nombre arretes : " + nbArretes);
+		System.out.println("Sommets : 1000" );
 
             } else {
                 minisat.printLinuxCommand("clear");
